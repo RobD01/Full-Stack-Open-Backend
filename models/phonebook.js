@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
-require("dotenv").config();
+// require("dotenv").config();
 
-// Authenticate
-const url = process.env.MONGODB_URI;
-console.log("connecting to", url);
+// // Authenticate
+// const url = process.env.MONGODB_URI;
+// console.log("connecting to", url);
 
 // Connect
-mongoose
-  .connect(url)
-  .then((result) => {
-    console.log("connected to MongoDB");
-  })
-  .catch((error) => {
-    console.log("error connecting to MongoDB:", error.message);
-  });
+// mongoose
+//   .connect(url)
+//   .then((result) => {
+//     console.log("connected to MongoDB");
+//   })
+//   .catch((error) => {
+//     console.log("error connecting to MongoDB:", error.message);
+//   });
 
 // Item model, schema
 
