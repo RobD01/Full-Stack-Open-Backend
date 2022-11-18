@@ -1,12 +1,12 @@
 {
-  "name": "full-stack-open-backend",
+  "name": "full-stack-open-backend-blog",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "server": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "mongo": "node mongo.js",
     "lint": "eslint ."
   },
@@ -21,6 +21,11 @@
     "nodemon": "^2.0.20"
   },
   "devDependencies": {
-    "eslint": "^8.27.0"
-  }
+    "eslint": "^8.27.0",
+    "jest": "^29.3.1"
+  },
+  "jest": {
+   "testEnvironment": "node"
+ }
+
 }

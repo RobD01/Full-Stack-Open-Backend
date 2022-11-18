@@ -2,10 +2,12 @@ const config = require("./utils/config");
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const phonebookRouter = require("./controllers/phonebook");
+const router = require("./controllers/controller");
 const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
 const mongoose = require("mongoose");
+
+// Check api url in line 28
 
 logger.info("connecting to", config.MONGODB_URI);
 
@@ -23,7 +25,7 @@ app.use(express.static("build"));
 app.use(express.json());
 app.use(middleware.requestLogger);
 
-app.use("/api/persons", phonebookRouter);
+app.use("/api/blog", router);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
