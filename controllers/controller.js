@@ -6,41 +6,33 @@ const model = require("../models/model");
 // CRUD
 
 // Get item
-router.get("/", (request, response) => {
-  model.find({}).then((item) => {
+router.get("/", async (request, response) => {
+  await model.find({}).then((item) => {
     response.json(item);
   });
 });
 
-router.get("/:id", (request, response, next) => {
-  model
-    .findById(request.params.id)
-    .then((item) => {
-      if (item) {
-        response.json(item);
-      } else {
-        response.status(404).end();
-      }
-    })
-    .catch((error) => {
-      next(error);
-    });
+router.get("/:id", async (request, response, next) => {
+  await model.findById(request.params.id).then((item) => {
+    if (item) {
+      response.json(item);
+    } else {
+      response.status(404).end();
+    }
+  });
 });
 
 // Delete item
 
-router.delete("/:id", (request, response, next) => {
-  model
-    .findByIdAndRemove(request.params.id)
-    .then((result) => {
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
+router.delete("/:id", async (request, response, next) => {
+  await model.findByIdAndRemove(request.params.id).then((result) => {
+    response.status(204).end();
+  });
 });
 
 // Update item
 
-router.put("/:id", (request, response, next) => {
+router.put("/:id", async (request, response, next) => {
   const body = request.body;
 
   const item = {
@@ -50,16 +42,15 @@ router.put("/:id", (request, response, next) => {
     likes: body.likes,
   };
 
-  model
+  await model
     .findByIdAndUpdate(request.params.id, item, { new: true })
     .then((updatedmodel) => {
       response.json(updatedmodel);
-    })
-    .catch((error) => next(error));
+    });
 });
 
 // Create new item post
-router.post("/", (request, response) => {
+router.post("/", async (request, response) => {
   const body = request.body;
 
   if (!body.title || !body.author || !body.url || !body.likes) {
@@ -76,12 +67,9 @@ router.post("/", (request, response) => {
   });
 
   // Save into MongoDB
-  item
-    .save()
-    .then((savedmodel) => {
-      response.json(savedmodel);
-    })
-    .catch((error) => console.log(error));
+  await item.save().then((savedmodel) => {
+    response.json(savedmodel);
+  });
 });
 
 module.exports = router;
