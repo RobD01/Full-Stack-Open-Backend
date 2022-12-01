@@ -37,7 +37,7 @@ describe("when there is initially one user in db", () => {
   });
 });
 
-describe("when there is initially one user in db", () => {
+describe.only("when there is initially one user in db", () => {
   // ...
 
   test("creation fails with proper statuscode and message if username already taken", async () => {
@@ -61,3 +61,5 @@ describe("when there is initially one user in db", () => {
     expect(usersAtEnd).toEqual(usersAtStart);
   });
 });
+
+// npm run test

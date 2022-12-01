@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "server": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "cross-env NODE_ENV=test jest user.test --verbose --runInBand --forceExit",
+    "test": "cross-env NODE_ENV=test jest blog_api.test --verbose --runInBand --forceExit",
     "mongo": "node mongo.js",
     "lint": "eslint ."
   },

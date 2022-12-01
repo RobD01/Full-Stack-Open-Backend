@@ -4,25 +4,29 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const helper = require("./test_helper");
 const app = require("../app");
-const Item = require("../models/blog");
+const Blog = require("../models/blog");
+const jwt = require("jsonwebtoken");
+const { getTokenFrom, userExtractor } = require("../utils/middleware");
 
 const api = supertest(app);
 
-const { initialItem, nonExistingId, itemsInDb } = helper;
+const { initialBlog, nonExistingId, itemsInDb } = helper;
 
 beforeEach(async () => {
-  await Item.deleteMany({});
+  await Blog.deleteMany({});
   console.log("cleared");
 
-  for (let item of initialItem) {
-    let itemObject = new Item(item);
+  for (let item of initialBlog) {
+    let itemObject = new Blog(item);
     await itemObject.save();
   }
 });
 
 // Get request
 
+// pass
 describe("get items", () => {
+  // pass
   test("blogs are returned as json", async () => {
     await api
       .get("/api/blog")
@@ -30,12 +34,14 @@ describe("get items", () => {
       .expect("Content-Type", /application\/json/);
   });
 
+  // pass
   test("all blog are returned", async () => {
     const response = await api.get("/api/blog");
 
-    expect(response.body).toHaveLength(initialItem.length);
+    expect(response.body).toHaveLength(initialBlog.length);
   });
 
+  // pass
   test("a specific note is within the returned blog", async () => {
     const response = await api.get("/api/blog");
 
@@ -43,64 +49,65 @@ describe("get items", () => {
     expect(contents).toContain("Future");
   });
 
+  // pass
   test("a specific item can be viewed", async () => {
     const itemsAtStart = await itemsInDb();
 
     const itemToView = itemsAtStart[0];
 
-    const resultItem = await api
+    const resultBlog = await api
       .get(`/api/blog/${itemToView.id}`)
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    const processedItemToView = JSON.parse(JSON.stringify(itemToView));
+    const processedBlogToView = JSON.parse(JSON.stringify(itemToView));
 
-    expect(resultItem.body).toEqual(processedItemToView);
+    expect(resultBlog.body).toEqual(processedBlogToView);
   });
 });
 
 // Post request
 
 describe("post items", () => {
-  test("a valid blog can be added", async () => {
-    const newItem = {
+  test.only("a valid blog can be added", async (request, response) => {
+    const newBlog = {
       title: "Friendship",
       author: "Reigan",
       url: "abc.com",
       likes: 33,
-      id: "ssss",
+      userId: 1,
     };
 
     await api
       .post("/api/blog")
-      .send(newItem)
+      .send(newBlog)
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
     const itemsAtEnd = await itemsInDb();
-    expect(itemsAtEnd).toHaveLength(initialItem.length + 1);
+    expect(itemsAtEnd).toHaveLength(initialBlog.length + 1);
 
     const title = itemsAtEnd.map((n) => n.title);
     expect(title).toContain("Friendship");
   });
 
   test("blog without content is not added", async () => {
-    const newItem = {};
+    const newBlog = {};
 
-    console.log(initialItem);
+    console.log(initialBlog);
 
     await api.post("/api/blog").send(newNote).expect(400);
 
     const response = await api.get("/api/blog");
 
-    expect(response.body).toHaveLength(initialItem.length);
+    expect(response.body).toHaveLength(initialBlog.length);
   });
 });
 
 // Delete request
 
 describe("delete item", () => {
-  test.only("a item can be deleted", async () => {
+  test("a item can be deleted", async () => {
     const itemsAtStart = await itemsInDb();
     const itemToDelete = itemsAtStart[0];
 
@@ -108,7 +115,7 @@ describe("delete item", () => {
 
     const itemsAtEnd = await itemsInDb();
 
-    expect(itemsAtEnd).toHaveLength(initialItem.length - 1);
+    expect(itemsAtEnd).toHaveLength(initialBlog.length - 1);
 
     const title = itemsAtEnd.map((r) => r.title);
 
@@ -122,7 +129,7 @@ describe("delete item", () => {
 
     const itemsAtEnd = await itemsInDb();
 
-    expect(itemsAtEnd).toHaveLength(initialItem.length - 1);
+    expect(itemsAtEnd).toHaveLength(initialBlog.length - 1);
 
     const title = itemsAtEnd.map((r) => r.title);
 
@@ -137,7 +144,7 @@ test("unique identifier is named id", async () => {
 });
 
 test("likes property missing , default to 0", async () => {
-  const newItem = {
+  const newBlog = {
     title: "Friendship",
     author: "Reigan",
     url: "abc.com",
@@ -147,20 +154,20 @@ test("likes property missing , default to 0", async () => {
 
   await api
     .post("/api/blog")
-    .send(newItem)
+    .send(newBlog)
     .expect(200)
     .expect("Content-Type", /application\/json/);
 
   const itemsAtEnd = await itemsInDb();
-  expect(itemsAtEnd).toHaveLength(initialItem.length + 1);
+  expect(itemsAtEnd).toHaveLength(initialBlog.length + 1);
 
-  const lastItem = itemsAtEnd[itemsAtEnd.length - 1];
-  expect(lastItem).toHaveProperty("likes", 0);
+  const lastBlog = itemsAtEnd[itemsAtEnd.length - 1];
+  expect(lastBlog).toHaveProperty("likes", 0);
 });
 
 // Put request
 test("a valid blog can be updated", async () => {
-  const newItem = {
+  const newBlog = {
     title: "Friendship",
     author: "Reigan",
     url: "abc.com",
@@ -173,7 +180,7 @@ test("a valid blog can be updated", async () => {
 
   await api
     .put(`/api/blog/${itemToUpdate.id}`)
-    .send(newItem)
+    .send(newBlog)
     .expect(200)
     .expect("Content-Type", /application\/json/);
 

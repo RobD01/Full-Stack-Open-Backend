@@ -1,7 +1,7 @@
-const Item = require("../models/blog");
+const Blog = require("../models/blog");
 const User = require("../models/user");
 
-const initialItem = [
+const initialBlog = [
   {
     title: "Prophecy",
     author: "Genos",
@@ -19,7 +19,7 @@ const initialItem = [
 ];
 
 const nonExistingId = async () => {
-  const note = new Item({
+  const note = new Blog({
     title: "Dragonball",
     author: "Akira",
     url: "abc.com",
@@ -32,7 +32,7 @@ const nonExistingId = async () => {
 };
 
 const itemsInDb = async () => {
-  const items = await Item.find({});
+  const items = await Blog.find({});
   return items.map((item) => item.toJSON());
 };
 
@@ -42,8 +42,10 @@ const usersInDb = async () => {
 };
 
 module.exports = {
-  initialItem,
+  initialBlog,
   nonExistingId,
   itemsInDb,
   usersInDb,
 };
+
+// npm run test
