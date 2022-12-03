@@ -30,4 +30,8 @@ loginRouter.post("/", async (request, response) => {
     .send({ token, username: user.username, name: user.name });
 });
 
+loginRouter.get("/", async (request, response) => {
+  response.json("logged in");
+});
+
 module.exports = loginRouter;
