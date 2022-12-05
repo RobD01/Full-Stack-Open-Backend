@@ -1,22 +1,3 @@
-// {
-//     "username": "yuta",
-// "password": "password"
-//   }
-
-// {
-//     "title": "body.title",
-//     "author": "body.author",
-//     "url": "body.url",
-//     "likes": 5
-//   }
-
-// {
-//     "title": "Minato vs Kakashi2",
-//     "author": "Kishimoto",
-//     "url": "body.url",
-//     "likes": 5
-//   }
-
 const blogRouter = require("express").Router();
 const blog = require("../models/blog");
 const User = require("../models/user");
