@@ -2,8 +2,7 @@ const blogRouter = require("express").Router();
 const blog = require("../models/blog");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const jwt_decode = require("jwt-decode");
-const { getTokenFrom, userExtractor } = require("../utils/middleware");
+const { getTokenFrom } = require("../utils/middleware");
 
 // Check item model in line 46 , 71
 
@@ -16,11 +15,6 @@ blogRouter.get("/", async (request, response) => {
     .populate("userId", { username: 1, name: 1 });
 
   response.json(blogs);
-
-  let token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inl1dGEiLCJpZCI6IjYzODE4NWQ4NDE1MTgwZTkzMTBiYTE5MiIsImlhdCI6MTY2OTYxNDg3MiwiZXhwIjoxNjY5NjE4NDcyfQ.9XMVs4_KgDDAKbmbu-YsKKceNqje2jcAfAdDYzAKibY";
-
-  let decoded = jwt_decode(token);
 });
 
 blogRouter.get("/:id", async (request, response) => {
